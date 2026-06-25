@@ -1,0 +1,7 @@
+# ai-code-review-demo coding rules
+
+- Never hardcode API keys or secrets anywhere in the codebase.
+- Always use process.env for secrets and credentials.
+- Keep code simple, readable, and well commented.
+- Write error handling for all API calls (GitHub, OpenAI, and any other external services).
+- Tests must cover both the happy path and error cases for every function.
