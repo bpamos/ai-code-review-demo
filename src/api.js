@@ -10,6 +10,12 @@ let todos = [];
 let nextId = 1;
 
 /**
+ * Demo API key loaded from environment (never hardcode secrets).
+ * Set DEMO_API_KEY in local .env for development.
+ */
+const apiKey = process.env.DEMO_API_KEY;
+
+/**
  * Add a new todo item to the in-memory store.
  *
  * @param {string} text - The todo description text
@@ -74,4 +80,5 @@ module.exports = {
   getAllTodos,
   deleteTodo,
   resetTodos,
+  apiKey,
 };
