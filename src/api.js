@@ -69,9 +69,31 @@ function resetTodos() {
   nextId = 1;
 }
 
+/**
+ * Mark a todo item as completed by id.
+ *
+ * @param {number} id - The id of the todo to complete
+ * @returns {{ id: number, text: string, completed: boolean }} The updated todo
+ * @throws {Error} If id is invalid or the todo is not found
+ */
+function completeTodo(id) {
+  if (typeof id !== 'number' || !Number.isInteger(id) || id <= 0) {
+    throw new Error('Todo id must be a positive integer');
+  }
+
+  const todo = todos.find((item) => item.id === id);
+  if (!todo) {
+    throw new Error(`Todo with id ${id} not found`);
+  }
+
+  todo.completed = true;
+  return { ...todo };
+}
+
 module.exports = {
   addTodo,
   getAllTodos,
   deleteTodo,
   resetTodos,
+  completeTodo,
 };
