@@ -69,9 +69,21 @@ function resetTodos() {
   nextId = 1;
 }
 
+/**
+ * Divide two numbers — intentionally missing error handling for demo purposes.
+ *
+ * @param {number} a - Dividend
+ * @param {number} b - Divisor
+ * @returns {number} Result of a / b
+ */
+function divide(a, b) {
+  return a / b;
+}
+
 module.exports = {
   addTodo,
   getAllTodos,
   deleteTodo,
   resetTodos,
+  divide,
 };
