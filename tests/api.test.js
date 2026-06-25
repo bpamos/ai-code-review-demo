@@ -1,4 +1,4 @@
-const { addTodo, getAllTodos, deleteTodo, resetTodos } = require('../src/api');
+const { addTodo, getAllTodos, deleteTodo, resetTodos, completeTodo } = require('../src/api');
 
 beforeEach(() => {
   resetTodos();
@@ -67,5 +67,31 @@ describe('deleteTodo', () => {
   test('error case: throws when id is invalid', () => {
     expect(() => deleteTodo('abc')).toThrow('Todo id must be a positive integer');
     expect(() => deleteTodo(-1)).toThrow('Todo id must be a positive integer');
+  });
+});
+
+describe('completeTodo', () => {
+  test('happy path: marks a todo as completed', () => {
+    const todo = addTodo('Finish demo');
+
+    const completed = completeTodo(todo.id);
+
+    expect(completed).toEqual({
+      id: todo.id,
+      text: 'Finish demo',
+      completed: true,
+    });
+    expect(getAllTodos()[0].completed).toBe(true);
+  });
+
+  test('error case: throws when id does not exist', () => {
+    addTodo('Only todo');
+
+    expect(() => completeTodo(999)).toThrow('Todo with id 999 not found');
+  });
+
+  test('error case: throws when id is invalid', () => {
+    expect(() => completeTodo('abc')).toThrow('Todo id must be a positive integer');
+    expect(() => completeTodo(-1)).toThrow('Todo id must be a positive integer');
   });
 });
