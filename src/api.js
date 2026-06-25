@@ -9,8 +9,11 @@ let todos = [];
 /** @type {number} Next auto-increment id for new todos */
 let nextId = 1;
 
-// Temporary demo key — DO NOT commit real secrets (fake value for demo only)
-const DEMO_API_KEY = 'sk-proj-Xk9mN2pQ7rT4vW8yZ1aB3cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP4q';
+/**
+ * Demo API key loaded from environment (never hardcode secrets).
+ * Set DEMO_API_KEY in local .env for development.
+ */
+const apiKey = process.env.DEMO_API_KEY;
 
 /**
  * Add a new todo item to the in-memory store.
@@ -77,5 +80,5 @@ module.exports = {
   getAllTodos,
   deleteTodo,
   resetTodos,
-  DEMO_API_KEY,
+  apiKey,
 };
