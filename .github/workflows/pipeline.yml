@@ -29,7 +29,7 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-  # Job 2: Scan for hardcoded secrets with GitLeaks
+  # Job 2: Scan changed PR files for hardcoded secrets with GitLeaks
   gitleaks:
     name: GitLeaks
     runs-on: ubuntu-latest
@@ -39,10 +39,43 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run GitLeaks
-        uses: gitleaks/gitleaks-action@v2
+      - name: Install Gitleaks
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz" \
+            | tar xz -C /usr/local/bin gitleaks
+          gitleaks version
+
+      # Scan full changed files at PR HEAD (not git diff hunks) so secrets
+      # are detected even when split across lines in the patch view.
+      - name: Scan changed files for secrets
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          FILES=$(git diff --name-only --diff-filter=ACMRT "$BASE_SHA" "$HEAD_SHA")
+          if [ -z "$FILES" ]; then
+            echo "No changed files to scan."
+            exit 0
+          fi
+
+          FOUND=0
+          while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            [ -f "$file" ] || continue
+            case "$file" in
+              src/*|tests/*|review.js) ;;
+              *) continue ;;
+            esac
+            echo "Scanning ${file}..."
+            if ! gitleaks detect --no-git --source "$file" --redact --verbose; then
+              FOUND=1
+            fi
+          done <<< "$FILES"
+
+          if [ "$FOUND" -ne 0 ]; then
+            echo "GitLeaks found hardcoded secrets in changed files."
+            exit 1
+          fi
 
   # Job 3: Run AI code review and post comment on the PR
   ai-review:

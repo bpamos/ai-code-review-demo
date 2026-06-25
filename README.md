@@ -7,7 +7,7 @@ An AI-powered code review bot that runs on every pull request to `main`. GitHub 
 This project demonstrates a lightweight CI/CD pipeline for pull requests:
 
 1. **ESLint** — catches style and syntax issues in `src/`, `tests/`, and `review.js`
-2. **GitLeaks** — scans the diff for hardcoded API keys, tokens, and other secrets
+2. **GitLeaks** — scans changed PR files for hardcoded API keys, tokens, and other secrets
 3. **AI Code Review** — sends changed-file diffs to OpenAI `gpt-4o` and posts the review as a PR comment
 4. **All Checks Passed** — a final gate that requires all three jobs to succeed
 
