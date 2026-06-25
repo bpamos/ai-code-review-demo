@@ -12,12 +12,14 @@ For each scenario, create a new branch from `main`, make the described changes, 
 
 ### Step 1 — Introduce a fake hardcoded API key
 
-On a new branch (e.g. `demo/gitleaks-failure`), add a fake key to `src/api.js`:
+On a new branch (e.g. `demo/gitleaks-failure`), add a **single-line** fake key to `src/api.js` (after `let nextId = 1;`):
 
 ```javascript
-// Temporary demo key — DO NOT commit real secrets
-const DEMO_API_KEY = 'sk-proj-abc123fakekey9876543210abcdef';
+// Temporary demo key — DO NOT commit real secrets (fake value for demo only)
+const DEMO_API_KEY = 'sk-proj-Xk9mN2pQ7rT4vW8yZ1aB3cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP4q';
 ```
+
+Keep the assignment on **one line** and export `DEMO_API_KEY` from `module.exports` so ESLint passes.
 
 Push the branch and open a PR to `main`.
 
@@ -30,12 +32,16 @@ In the **Actions** tab, the **GitLeaks** job fails. The **All Checks Passed** jo
 Remove the hardcoded key and read credentials from the environment instead:
 
 ```javascript
+/**
+ * Demo API key loaded from environment (never hardcode secrets).
+ * Set DEMO_API_KEY in local .env for development.
+ */
 const apiKey = process.env.DEMO_API_KEY;
 ```
 
-Add `DEMO_API_KEY` to your local `.env` file for development (never commit `.env`).
+Export `apiKey` from `module.exports` (replace `DEMO_API_KEY`). Add `DEMO_API_KEY` to your local `.env` file for development (never commit `.env`).
 
-Push the fix to the same branch. GitLeaks passes, and the rest of the pipeline runs.
+Push the fix to the same branch. GitLeaks scans the updated file contents and passes; the rest of the pipeline runs.
 
 ---
 
@@ -127,5 +133,6 @@ The PR is merge-ready once branch protection requires the **All Checks Passed** 
 ## Tips
 
 - Run `npm test` and `npm run lint` locally before pushing to catch issues early.
+- GitLeaks scans **changed files at PR head**, not diff fragments — use a high-entropy fake key on one line so it matches on the first push.
 - AI review comments vary slightly between runs; focus on whether real issues are identified.
 - Configure branch protection on `main` to require the **All Checks Passed** status check for merge enforcement.
