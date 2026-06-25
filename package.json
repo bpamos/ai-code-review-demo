@@ -1,0 +1,19 @@
+{
+  "name": "ai-code-review-demo",
+  "version": "1.0.0",
+  "description": "AI-powered code review bot that reviews pull requests via GitHub Actions",
+  "main": "src/api.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src tests review.js",
+    "review": "node review.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "clearMocks": true
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "jest": "^29.7.0"
+  }
+}
