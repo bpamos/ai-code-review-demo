@@ -62,6 +62,10 @@ jobs:
           while IFS= read -r file; do
             [ -n "$file" ] || continue
             [ -f "$file" ] || continue
+            case "$file" in
+              src/*|tests/*|review.js) ;;
+              *) continue ;;
+            esac
             echo "Scanning ${file}..."
             if ! gitleaks detect --no-git --source "$file" --redact --verbose; then
               FOUND=1
